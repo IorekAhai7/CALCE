@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+  --navy: #1d3045;
+  --gold: #a9893e;
+  --background: #ffffff;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--background); color: var(--navy); font-family: Arial, sans-serif; font-size: 1rem; line-height: 1.6; }
+.foundation { max-width: 44rem; margin: 0 auto; padding: 5rem 1.5rem; }
+.brand { font-weight: 700; border-bottom: 2px solid var(--gold); padding-bottom: 1rem; }
+h1 { font-size: clamp(1.75rem, 5vw, 2.5rem); line-height: 1.2; margin: 2rem 0 1rem; }
