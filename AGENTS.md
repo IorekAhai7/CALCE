@@ -5,7 +5,8 @@ is a Next.js/PostgreSQL project. Preserve its architecture and lockfile.
 
 ## Product boundaries
 
-- Current work is the foundation. Functional screens follow prototype validation.
+- Current work is the technical pilot explicitly authorized on 2026-09-19.
+  Provisional functional screens support testing; final UX follows lawyer validation.
 - The Matter (Asunto) is the operational center. Payments are entered in its context.
 - Event = scheduled; Movement = actually happened; Task = action required;
   Document = private file. Preserve these distinctions.
