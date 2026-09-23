@@ -35,7 +35,7 @@ jobs:
   database:
     name: Database isolation
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
@@ -51,6 +51,24 @@ jobs:
         run: npm run db:reset
       - run: npm run db:lint
       - run: npm run db:test
+      - name: Configure isolated local credentials without printing them
+        run: npm run env:local
+      - name: Exercise Auth, REST, private bytes and concurrency
+        run: npm run test:integration
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - name: Exercise the browser workflow
+        run: npm run test:e2e
+      - name: Preserve browser report and fictional-data screenshots
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: browser-evidence
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+          if-no-files-found: ignore
       - name: Stop local platform
         if: always()
         run: npm run db:stop

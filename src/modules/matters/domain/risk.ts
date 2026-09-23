@@ -1,5 +1,8 @@
 export type MatterRisk = "NEUTRAL" | "GREEN" | "YELLOW" | "RED";
-export type RiskThresholds = Readonly<{ criticalDays: number; warningDays: number }>;
+export type RiskThresholds = Readonly<{
+  criticalDays: number;
+  warningDays: number;
+}>;
 
 export const DEFAULT_RISK_THRESHOLDS: RiskThresholds = Object.freeze({
   criticalDays: 2,
@@ -15,8 +18,12 @@ export function deriveMatterRisk(
   thresholds: RiskThresholds = DEFAULT_RISK_THRESHOLDS,
 ): MatterRisk {
   const { criticalDays, warningDays } = thresholds;
-  if (!Number.isSafeInteger(criticalDays) || !Number.isSafeInteger(warningDays)
-    || criticalDays < 0 || warningDays <= criticalDays) {
+  if (
+    !Number.isSafeInteger(criticalDays) ||
+    !Number.isSafeInteger(warningDays) ||
+    criticalDays < 0 ||
+    warningDays <= criticalDays
+  ) {
     throw new Error("INVALID_RISK_THRESHOLDS");
   }
   let nearest = Infinity;

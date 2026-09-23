@@ -1,67 +1,49 @@
 # CALCE ABOGADOS
 
-Base técnica de la web y del sistema de gestión del despacho. El producto se
-organiza alrededor del Asunto: historia, agenda, pendientes, documentos y finanzas.
+Piloto técnico de gestión del despacho: acceso privado, clientes, asuntos, agenda,
+pendientes, movimientos y documentos. Next.js + TypeScript + PostgreSQL/Supabase.
 
-## Estado
+## Probar
 
-Primera entrega de Foundation M0, todavía sin pantallas funcionales:
-
-- Next.js App Router, React, TypeScript estricto y Tailwind.
-- Lint, comprobación de tipos, Vitest y compilación reproducibles.
-- PostgreSQL/Supabase local: despachos, perfiles, membresías, configuración y auditoría.
-- RLS inicial, permisos mínimos, protección de roles y auditoría de configuración.
-- Dos despachos ficticios y pruebas pgTAP de aislamiento, revocación e integridad.
-- Bucket privado reservado para documentos; acceso a archivos todavía cerrado.
-- GitHub Actions para la aplicación y la base de datos.
-
-Pendiente para completar M0: sesión técnica de aplicación, clientes/asuntos,
-metadatos y acceso seguro a documentos, pruebas HTTP de Auth/Storage y recuperación.
-Después sigue el prototipo validado con los abogados. El sitio no se despliega en esta entrega.
-
-## Ejecutar la aplicación
-
-Requisitos: Node 24 (versión en .nvmrc) y npm. Desde la raíz:
+La [guía de prueba técnica](docs/PRUEBA_TECNICA.md) incluye instalación, cuentas
+ficticias, recorrido completo y casos de rechazo. La rama `feat/private-case-workflow`
+contiene las entregas apiladas: foundation #1, datos #2 y aplicación #3.
 
 ```bash
 npm ci
-npm run check
+npm run db:start
+npm run db:reset
+npm run env:local
 npm run dev
 ```
 
-La página inicial es un aviso técnico de preparación. GET /api/health comprueba
-que responde el proceso web; no comprueba la base de datos ni declara disponibilidad del producto.
-La base inicial compila sin credenciales ni servicios remotos.
+Requiere Node 24 y Docker. `db:reset` destruye únicamente la base local; usar muestras.
+Abre http://localhost:3000. No se necesita un Supabase remoto para esta prueba.
 
-## Ejecutar la plataforma y sus pruebas
+## Verificación
 
-Además se necesita Docker Desktop o un runtime compatible con Docker. La CLI está
-fijada en package.json; no se requiere instalar Supabase globalmente ni crear un proyecto remoto.
+- `npm run check`: lint, tipos, reglas de dominio y build.
+- `npm run db:lint` y `npm run db:test`: esquema, transacciones y RLS con pgTAP.
+- `npm run test:integration`: Auth/REST/Storage reales, revocación y concurrencia en local.
+- `npm run test:e2e`: recorrido de navegador sobre el build (instalar Chromium primero).
+- GitHub Actions prepara su propia instancia efímera y ejecuta las comprobaciones.
 
-```bash
-npm run db:start
-npm run db:reset
-npm run db:lint
-npm run db:test
-npm run db:stop
-```
+## Arquitectura
 
-db:reset reconstruye la base LOCAL y elimina su contenido previo. Usar únicamente
-datos ficticios. Los comandos del proyecto incluyen --local para reset y lint.
-La suite SQL cambia el rol y las claims de prueba para comprobar RLS; no sustituye
-las futuras pruebas de inicio de sesión por HTTP. Las identidades ficticias no tienen contraseña.
+- `src/app`: páginas y adaptadores Next.js; sesión verificada en servidor.
+- `src/modules/cases`: operaciones, consultas y reglas del expediente.
+- `supabase/migrations`: esquema, RPCs transaccionales y políticas explícitas.
+- `supabase/seed.sql`: cuentas y registros ficticios exclusivamente locales.
+- `tests`: pruebas unitarias, SQL, HTTP y navegador.
 
-Si el equipo de trabajo carece de Docker, las pruebas de base de datos se ejecutan
-en el runner de GitHub Actions, que inicia su propia plataforma efímera.
+La aplicación no usa service_role. Las escrituras pasan por operaciones específicas;
+RLS y claves compuestas aíslan despachos. Los bytes permanecen privados, con una
+reserva/confirmación explícita para manejar cargas interrumpidas.
 
-## Organización
+## Alcance
 
-- src/app: adaptadores y rutas de Next.js.
-- src/modules: dominio y casos de uso por módulo; sólo se crean los que tienen código.
-- supabase/migrations: cambios de esquema y permisos.
-- supabase/seed.sql: fixtures locales/CI.
-- supabase/tests/database: pruebas de PostgreSQL con pgTAP.
-- tests/unit: reglas puras de dominio.
-- docs: decisiones y contexto de ingeniería.
+Pantallas provisionales para prueba técnica. No incluye web pública, finanzas,
+producción, recuperación validada ni UX aprobada por los abogados. M0 sigue abierto
+hasta cerrar sus pendientes, incluida la actualización compatible de ESLint.
 
-Leer AGENTS.md y docs/PROJECT_CONTEXT.md antes de contribuir.
+Leer [AGENTS.md](AGENTS.md), [contexto](docs/PROJECT_CONTEXT.md) y la guía antes de contribuir.

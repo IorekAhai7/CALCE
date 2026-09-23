@@ -11,3 +11,6 @@ next-env.d.ts
 *.log
 supabase/.temp/
 supabase/.branches/
+
+playwright-report/
+test-results/
