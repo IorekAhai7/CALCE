@@ -26,7 +26,12 @@ export function Select({
   return (
     <label>
       {label}
-      <select name={name} defaultValue={defaultValue} required={required}>
+      <select
+        aria-label={label}
+        name={name}
+        defaultValue={defaultValue}
+        required={required}
+      >
         {children}
       </select>
     </label>
