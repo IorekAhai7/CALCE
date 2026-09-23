@@ -193,9 +193,12 @@ test("complete case journey, private download, collaborator, foreign account and
   await expect(
     page.getByRole("link", { name: "Descargar documento", exact: true }),
   ).toBeVisible();
-  await page
-    .getByRole("button", { name: "Reabrir asunto", exact: true })
-    .click();
+  const reopen = page
+    .locator("form")
+    .getByRole("button", { name: "Reabrir asunto", exact: true });
+  if (!(await reopen.isVisible()))
+    await page.locator("summary").filter({ hasText: "Reabrir asunto" }).click();
+  await reopen.click();
   await expect(
     page.getByRole("button", { name: "Guardar resultado", exact: true }),
   ).toBeVisible();

@@ -2,6 +2,8 @@ import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { createClient } from "@supabase/supabase-js";
 import { randomUUID } from "node:crypto";
+import { execFileSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 process.loadEnvFile(".env.test.local");
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL,
   key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
@@ -12,7 +14,34 @@ const anonymous = createClient(url, key, options),
   a = createClient(url, key, options),
   lawyer = createClient(url, key, options),
   b = createClient(url, key, options);
-const admin = createClient(url, process.env.SUPABASE_SERVICE_ROLE_KEY, options);
+// Fixture administration stays in the disposable local PostgreSQL container.
+// Never broaden application/service-role grants to make this test pass.
+const projectId = readFileSync("supabase/config.toml", "utf8").match(
+  /^project_id\s*=\s*"([A-Za-z0-9_-]+)"/m,
+)?.[1];
+if (!projectId) throw new Error("Missing local project id");
+function setLawyerActive(active) {
+  assert.equal(typeof active, "boolean");
+  const sql = `update public.profiles set is_active=${active ? "true" : "false"} where id='00000000-0000-4000-a000-000000000102' returning id;`;
+  const output = execFileSync(
+    "docker",
+    [
+      "exec",
+      `supabase_db_${projectId}`,
+      "psql",
+      "-U",
+      "postgres",
+      "-d",
+      "postgres",
+      "-v",
+      "ON_ERROR_STOP=1",
+      "-c",
+      sql,
+    ],
+    { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
+  );
+  assert.ok(output.includes("00000000-0000-4000-a000-000000000102"));
+}
 const A = "10000000-0000-4000-a000-000000000001",
   B = "10000000-0000-4000-a000-000000000002";
 const MA = "40000000-0000-4000-a000-000000000001",
@@ -42,12 +71,7 @@ before(async () => {
     assert.ok(r.data.session);
   }
 });
-after(async () => {
-  await admin
-    .from("profiles")
-    .update({ is_active: true })
-    .eq("id", "00000000-0000-4000-a000-000000000102");
-});
+after(() => setLawyerActive(true));
 test("invalid password and anonymous business access are rejected", async () => {
   denied(
     await anonymous.auth.signInWithPassword({
@@ -197,11 +221,7 @@ test("a stored object cannot be overwritten or deleted by application users", as
   assert.deepEqual(Buffer.from(await r.data.arrayBuffer()), PDF);
 });
 test("revocation blocks private bytes and writes with the existing access token", async () => {
-  const update = await admin
-    .from("profiles")
-    .update({ is_active: false })
-    .eq("id", "00000000-0000-4000-a000-000000000102");
-  assert.equal(update.error, null);
+  setLawyerActive(false);
   try {
     denied(await lawyer.storage.from("legal-documents").download(path));
     denied(
@@ -213,11 +233,7 @@ test("revocation blocks private bytes and writes with the existing access token"
       }),
     );
   } finally {
-    const restored = await admin
-      .from("profiles")
-      .update({ is_active: true })
-      .eq("id", "00000000-0000-4000-a000-000000000102");
-    assert.equal(restored.error, null);
+    setLawyerActive(true);
   }
 });
 test("concurrent outcomes produce one movement and one next task", async () => {

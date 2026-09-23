@@ -103,8 +103,9 @@ npm run test:e2e
 ```
 
 `test:integration` usa únicamente un Supabase LOCAL y modifica datos ficticios.
-Las credenciales administrativas sólo se utilizan en las pruebas para revocar y
-restaurar un perfil; la aplicación usa exclusivamente la identidad del usuario.
+La preparación de revocación usa SQL dentro del contenedor PostgreSQL local para
+desactivar y restaurar un perfil ficticio. Las peticiones verificadas y la aplicación
+usan exclusivamente la identidad del usuario; no se generan llaves administrativas.
 Playwright recorre los formularios, verifica bytes descargados, otra cuenta del
 mismo despacho, otro despacho, cierre de sesión, cuenta inactiva y vista móvil.
 Las pruebas HTTP comprueban además sobrescritura/borrado prohibidos y concurrencia.
