@@ -72,3 +72,36 @@ El repositorio contiene código y contexto técnico, sin expedientes, credencial
 activos personales del handoff. El uso con datos reales exige recuperar tanto base
 de datos como archivos, validar el aviso de privacidad y preparar una carga inicial acotada.
 La marca y la migración de dominio se trabajan antes de la publicación de la web.
+
+## Piloto técnico autorizado el 19 de septiembre de 2026
+
+El usuario autorizó desarrollar pantallas provisionales para ampliar la prueba:
+sesión, clientes, asuntos, documentos, agenda, tareas, movimientos y Hoy. Esto
+adelanta la prueba funcional; el diseño definitivo sigue sujeto a validación con
+los abogados. Se conserva Next.js y no se selecciona ni activa hosting.
+
+Las decisiones de foundation descritas arriba son históricas: ahora `firm_team`
+expone únicamente identificador de membresía y nombre para asignación autorizada.
+Storage tiene políticas que requieren una reserva exacta y membresía vigente.
+Las cuentas ficticias del seed ahora permiten login por contraseña en local.
+
+Las escrituras de negocio son RPCs explícitas SECURITY DEFINER con autorización
+al inicio, search_path vacío y grants restringidos. No se concede CRUD directo.
+Los resultados con siguiente tarea son atómicos; el bloqueo del asunto serializa
+archivo y operaciones, y las versiones del evento detectan formularios desactualizados.
+La auditoría registra acciones e identidades sin copiar notas ni archivos sensibles.
+
+Auth usa cookies HttpOnly y verificación en servidor. Proxy mantiene la sesión;
+las páginas, acciones y descargas comprueban identidad nuevamente. Cada operación
+aplica membresía activa en DB; tener un JWT no garantiza acceso al despacho.
+Las descargas de la aplicación se sirven autenticadas y con no-store, sin publicar
+URLs públicas. Supabase puede emitir URLs firmadas a usuarios autorizados; su
+revocación inmediata no se promete, por lo que la aplicación no las utiliza.
+
+Se revisó nuevamente el registro de eslint-plugin-react: la versión 7.37.5 aún
+limita su peerDependency a ESLint 9. Se conserva la excepción documentada en vez
+de forzar una combinación no soportada. Debe resolverse antes de producción.
+
+No hay borrados de negocio. Los movimientos son inmutables en este piloto; corregir
+uno exige registrar una aclaración como nuevo movimiento independiente. La limpieza
+de bytes de cargas descartadas y la recuperación completa siguen pendientes.

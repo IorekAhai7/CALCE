@@ -1,14 +1,368 @@
 @import "tailwindcss";
-
 :root {
-  color-scheme: light;
-  --navy: #1d3045;
-  --gold: #a9893e;
-  --background: #ffffff;
+  --ink: #172737;
+  --muted: #53616b;
+  --gold: #a17b32;
+  --line: #d5dde1;
+  --paper: #f4f6f7;
+  --white: #fff;
+  --focus: #1e6ed4;
 }
-
-* { box-sizing: border-box; }
-body { margin: 0; background: var(--background); color: var(--navy); font-family: Arial, sans-serif; font-size: 1rem; line-height: 1.6; }
-.foundation { max-width: 44rem; margin: 0 auto; padding: 5rem 1.5rem; }
-.brand { font-weight: 700; border-bottom: 2px solid var(--gold); padding-bottom: 1rem; }
-h1 { font-size: clamp(1.75rem, 5vw, 2.5rem); line-height: 1.2; margin: 2rem 0 1rem; }
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+}
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+}
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+  margin: 0 0 1rem;
+  font-weight: 700;
+}
+h1 {
+  font-family: Georgia, serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin-top: 1rem;
+}
+h2 {
+  font-size: 1.45rem;
+  margin-top: 1.8rem;
+}
+h3 {
+  font-size: 1.12rem;
+}
+p {
+  margin: 0.5rem 0 1rem;
+}
+a {
+  color: #17537a;
+  text-underline-offset: 4px;
+}
+a:hover {
+  text-decoration: underline;
+}
+button,
+.button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 46px;
+  background: var(--ink);
+  color: white;
+  padding: 0.65rem 1.2rem;
+  border: 1px solid var(--ink);
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+button:hover,
+.button:hover {
+  background: #2b465d;
+}
+button:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+.secondary {
+  background: white;
+  color: var(--ink);
+}
+.secondary:hover {
+  color: white;
+}
+input,
+textarea,
+select {
+  display: block;
+  width: 100%;
+  background: white;
+  color: var(--ink);
+  border: 1px solid #96a5af;
+  border-radius: 5px;
+  padding: 0.65rem 0.75rem;
+  min-height: 46px;
+  font: inherit;
+  margin-top: 0.35rem;
+}
+textarea {
+  resize: vertical;
+}
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+input[type="hidden"] {
+  display: none;
+}
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+.container {
+  max-width: 1180px;
+  margin: auto;
+  padding: 2rem 1.5rem 4rem;
+}
+.login {
+  max-width: 510px;
+  margin: 10vh auto;
+  padding: 2.5rem;
+  background: white;
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--gold);
+  border-radius: 8px;
+}
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+.topbar {
+  background: white;
+  border-bottom: 1px solid var(--line);
+  padding: 1rem 2rem;
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.brand {
+  font-family: Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: none;
+}
+.brand span {
+  font-family: Arial, sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  display: block;
+}
+.topbar nav,
+.tabs {
+  display: flex;
+  gap: 1.4rem;
+  flex-wrap: wrap;
+}
+.topbar nav a {
+  font-weight: 600;
+  text-decoration: none;
+}
+.topbar form {
+  margin: 0;
+}
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: start;
+}
+.panel,
+.cards li {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 1.3rem;
+  margin-bottom: 1rem;
+  overflow-wrap: anywhere;
+}
+.panel h2:first-child {
+  margin-top: 0;
+}
+.cards {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+.cards a {
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+.cards p {
+  font-size: 0.95rem;
+  margin: 0.5rem 0 0;
+}
+.badge {
+  display: inline-block;
+  border-radius: 30px;
+  padding: 0.2rem 0.8rem;
+  background: #e5e9ed;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin: 0.35rem;
+}
+.risk-red {
+  background: #fbe3e0;
+  color: #8e2220;
+}
+.risk-yellow {
+  background: #fcf0c5;
+  color: #715211;
+}
+.risk-green {
+  background: #dbeee5;
+  color: #215c42;
+}
+.risk-neutral {
+  background: #e5e9ed;
+  color: #44515a;
+}
+.tabs {
+  padding: 1.1rem 0;
+  border-block: 1px solid var(--line);
+  margin: 1.5rem 0;
+}
+.muted {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+.empty {
+  padding: 1.5rem;
+  border: 1px dashed #aab7bf;
+  border-radius: 6px;
+  color: var(--muted);
+}
+.error {
+  color: #982b28;
+}
+.success {
+  color: #216442;
+}
+.error:empty,
+.success:empty {
+  display: none;
+}
+.notice {
+  background: #fcf0c5;
+  padding: 1rem;
+  border-radius: 6px;
+}
+.preserve {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 2rem 0;
+}
+.stats > div {
+  padding: 1.5rem;
+  border-top: 3px solid var(--gold);
+  background: white;
+}
+.stats strong {
+  display: block;
+  font-size: 2.3rem;
+}
+.heading,
+.search {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+.search label {
+  flex: 1;
+}
+.search button {
+  margin-top: 0.65rem;
+}
+summary {
+  cursor: pointer;
+  font-weight: 700;
+  min-height: 44px;
+  display: list-item;
+}
+details[open] > summary {
+  margin-bottom: 1rem;
+}
+footer {
+  text-align: center;
+  color: var(--muted);
+  padding: 1.5rem;
+  font-size: 0.85rem;
+}
+.skip {
+  position: absolute;
+  top: -80px;
+  left: 1rem;
+  background: white;
+  padding: 1rem;
+  z-index: 10;
+}
+.skip:focus {
+  top: 1rem;
+}
+section {
+  min-width: 0;
+}
+@media (max-width: 760px) {
+  .columns {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .container {
+    padding: 1.5rem 1rem;
+  }
+  .topbar {
+    padding: 1rem;
+    gap: 1rem;
+  }
+  .topbar nav {
+    order: 3;
+    width: 100%;
+    gap: 1rem;
+  }
+  .stats {
+    grid-template-columns: 1fr;
+  }
+  .stats > div {
+    padding: 1rem;
+  }
+  .stats strong {
+    display: inline;
+    margin-right: 0.7rem;
+  }
+  .login {
+    margin: 5vh 1rem;
+    padding: 1.5rem;
+  }
+  .heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .panel {
+    padding: 1rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
