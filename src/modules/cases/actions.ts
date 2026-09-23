@@ -87,7 +87,8 @@ export async function login(
 }
 export async function logout() {
   const client = await db();
-  await client.auth.signOut({ scope: "local" });
+  const { error } = await client.auth.signOut({ scope: "local" });
+  if (error) throw new Error("No se pudo cerrar sesión. Intenta nuevamente.");
   revalidatePath("/app", "layout");
   redirect("/login");
 }

@@ -57,6 +57,14 @@ test("invalid password and anonymous business access are rejected", async () => 
   );
   denied(await anonymous.from("clients").select("*"));
 });
+test("enabling email login does not enable public registration", async () => {
+  const result = await anonymous.auth.signUp({
+    email: `uninvited-${randomUUID()}@calce.test`,
+    password: "CalceDemo!2026",
+  });
+  assert.equal(result.error?.code, "signup_disabled");
+  assert.equal(result.data.session, null);
+});
 test("authenticated REST and RPC enforce tenant boundaries", async () => {
   const r = await lawyer.from("matters").select("*");
   assert.equal(r.error, null);
